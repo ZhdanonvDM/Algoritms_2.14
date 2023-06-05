@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class StringListImpl implements StringList{
-    private String[] s = new String[10];
+    private String[] s = new String[2];
 
 
     public StringListImpl() {
@@ -17,17 +17,41 @@ public class StringListImpl implements StringList{
         if (item == null) {
             throw new NullPointerException("Нельзя добавлять значение null");
         }
-        String[] s2 = new String[s.length+1];
-         for (int i = 0; i < index; i++) {
-            s2[i] = s[i];
+            String[] s2 = new String[size()+1];
+            for (int i = 0; i < index; i++) {
+                s2[i] = s[i];
+            }
+            s2[index] = item;
+            for (int i = index; i < s.length; i++) {
+                s2[i+1] = s[i];
+            }
+            s = s2;
+            return item;
+    }
+
+    @Override
+    public String add(String item) {
+        if (item == null) {
+            throw new NullPointerException("Нельзя добавлять значение null");
         }
-        s2[index] = item;
-        for (int i = index; i < s.length; i++) {
-            s2[i+1] = s[i];
-        }
-        s = s2;
+        if (size() != s.length) {
+            for (int i = 0; i < s.length; i++) {
+                if (s[i] == null) {
+                    s[i] = item;
+                    return item;
+                }
+            }
+        } else {
+            int size1 = size()+1;
+            String[] s2 = new String[size1];
+            for (int i = 0; i < size(); i++) {
+                s2[i] = s[i];
+            }
+            s = s2;
+            s[size()] = item;}
         return item;
     }
+
 
     @Override
     public String remove(String item) {
@@ -104,19 +128,7 @@ public class StringListImpl implements StringList{
     }
 
 
-@Override
-public String add(String item) {
-    if (item == null) {
-        throw new NullPointerException("Нельзя добавлять значение null");
-    }
-    for (int i = 0; i < s.length; i++) {
-        if (s[i] == null) {
-            s[i] = item;
-            return item;
-        }
-    }
-    return item;
-}
+
     @Override
     public String get(int index) {
         if (index > size() || index < 0) {
