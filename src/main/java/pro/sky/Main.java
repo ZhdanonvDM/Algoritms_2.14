@@ -1,115 +1,103 @@
 package pro.sky;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
-        StringListImpl s = new StringListImpl();
-        StringListImpl s2 = new StringListImpl();
+      IntegerListImpl s = new IntegerListImpl();
         fillBase(s);
-        s.add("3");
-        s.add("4");
-        printStringList(s);
+        System.out.println(s.containsBinary((Integer)8));
 
 
-/*        fillBase(s);
-//        fillBase(s2);
-        System.out.println(s.remove("3"));
-        printStringList(s);*/
-//        StringListImpl s2 = s;
-//        fillBase(s2);
-//        s2.add("6");
-/*        printStringList(s2);
-        System.out.println(s2.equals(s));*/
-//        printStringList(s2);
-//        System.out.println(s2.equals(s));
+/*//      Тестирование методов сортировки
 
+        int[] testArray = generateRandomArray();
+        long start = System.currentTimeMillis();
 
-/*        fillBase(s);
-        System.out.println(s.isEmpty());*/
-/*        fillBase(s);
-        System.out.println(s.size());*/
+        //Пузырьковая сортировка
+        sortBubble(Arrays.copyOf(testArray, testArray.length));
+        System.out.println(System.currentTimeMillis() - start);
 
+        //Сортировка выбором
+        start = System.currentTimeMillis();
+        sortSelection(Arrays.copyOf(testArray, testArray.length));
+        System.out.println(System.currentTimeMillis() - start);
 
-//      Тестирование ArrayList
-/*      List<String> al = new ArrayList<>();
-      s.add("1");
-      al.clear();
-        System.out.println(al);
-        System.out.println(al.size());*/
-
-
-
-
-//       al.isEmpty();
-/*        al.add(null);
-        al.add("1");
-        al.add(null);
-        al.add("2");
-        System.out.println(al.size());*/
-
-
-/*        fillBase(s);
-        printStringList(s);
-        System.out.println(s.contains("8"));*/
-//        printStringList(s);
-
-/*        System.out.println(s.indexOf("5"));
-        System.out.println(s.lastIndexOf("5"));*/
-
-//      Тестирование remove (int index, String item)
-/*      printStringList(s);
-        s.remove(2);
-        printStringList(s);*/
-
-
-//      Тестирование метода (int index, String item)
-/*        printStringList(s);
-        System.out.println();
-        s.add(3, "7");
-        s.add(4, "8");
-        printStringList(s);*/
-
-
-
-
-
-
-//      Тестирование clear
-/*        String[] test = s.toArray();
-        for (int i = 0; i < test.length; i++) {
-            System.out.println(test[i]);
-        }
-        System.out.println();
-        s.clear();
-        test = s.toArray();
-        for (int i = 0; i < test.length; i++) {
-            System.out.println(test[i]);
-        }*/
-
-//      Метод вывод StringList на экран
-
+        //Сортировка вставкой
+        start = System.currentTimeMillis();
+        sortInsertion(Arrays.copyOf(testArray, testArray.length));
+        System.out.println(System.currentTimeMillis() - start);*/
     }
 
-    public static void printStringList(StringListImpl s) {
-//        test = s.toArray();
+
+    //Методы сортировки
+
+    public static void sortSelection(int[] arr) {
+        for (int i = 0; i < arr.length - 1; i++) {
+            int minElementIndex = i;
+            for (int j = i + 1; j < arr.length; j++) {
+                if (arr[j] < arr[minElementIndex]) {
+                    minElementIndex = j;
+                }
+            }
+            swapElements(arr, i, minElementIndex);
+        }
+    }
+
+    public static void sortInsertion(int[] arr) {
+        for (int i = 1; i < arr.length; i++) {
+            int temp = arr[i];
+            int j = i;
+            while (j > 0 && arr[j - 1] >= temp) {
+                arr[j] = arr[j - 1];
+                j--;
+            }
+            arr[j] = temp;
+        }
+    }
+
+    public static void sortBubble(int[] arr) {
+        for (int i = 0; i < arr.length - 1; i++) {
+            for (int j = 0; j < arr.length - 1 - i; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    swapElements(arr, j, j + 1);
+                }
+            }
+        }
+    }
+
+    private static void swapElements(int[] arr, int indexA, int indexB) {
+        int tmp = arr[indexA];
+        arr[indexA] = arr[indexB];
+        arr[indexB] = tmp;
+    }
+
+
+
+    public static int[] generateRandomArray() {
+        java.util.Random random = new java.util.Random();
+        int[] arr = new int[100_000];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = random.nextInt(10000) + 10000;
+        }
+        return arr;
+    }
+
+
+
+    public static void printStringList(IntegerListImpl s) {
         for (int i = 0; i < s.size(); i++) {
             System.out.println(s.get(i));
         }
         System.out.println();
     }
-    public static void fillBase (StringListImpl s) {
-        s.add("1");
-        s.add("3");
-/*        s.add("2");
-        s.add("4");
-        s.add("5");
-        s.add("6");*/
-//        s.add(2, null);
-//        s.set(3, null);
+    public static void fillBase (IntegerListImpl s) {
+        s.add(1);
+        s.add(3);
+        s.add(2);
+        s.add(8);
+        s.add(0);
+        s.add(4);
     }
-
-
 
 }

@@ -3,26 +3,76 @@ package pro.sky;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
-public class StringListImpl implements StringList{
-    private String[] s = new String[2];
+public class IntegerListImpl implements IntegerList {
+    private Integer[] s = new Integer[10];
 
 
-    public StringListImpl() {
+    public IntegerListImpl() {
         this.s = s;
     }
 
 
+    private Integer[] sortInsertion() {
+        Integer[] result = Arrays.copyOf(s, size());
+        for (int i = 1; i < size(); i++) {
+            Integer temp = result[i];
+            int j = i;
+            while (j > 0 && result[j - 1] >= temp) {
+                result[j] = result[j - 1];
+                j--;
+            }
+            result[j] = temp;
+        }
+        return result;
+    }
+
+
     @Override
-    public String add(int index, String item) {
+    public boolean contains(Integer item) {
+        boolean check = false;
+        for (int i = 0; i < size(); i++) {
+            if (s[i].equals(item)) {
+                check = true;
+            }
+        }
+        return check;
+    }
+    @Override
+    public boolean containsBinary (Integer element) {
+        Integer[] arr = sortInsertion();
+        int min = 0;
+        int max = arr.length - 1;
+
+        while (min <= max) {
+            int mid = (min + max) / 2;
+
+            if (element == arr[mid]) {
+                return true;
+            }
+
+            if (element < arr[mid]) {
+                max = mid - 1;
+            } else {
+                min = mid + 1;
+            }
+        }
+        return false;
+    }
+
+
+
+
+    @Override
+    public Integer add(int index, Integer item) {
         if (item == null) {
             throw new NullPointerException("Нельзя добавлять значение null");
         }
-            String[] s2 = new String[size()+1];
+            Integer[] s2 = new Integer[size()+1];
             for (int i = 0; i < index; i++) {
                 s2[i] = s[i];
             }
             s2[index] = item;
-            for (int i = index; i < s.length; i++) {
+            for (int i = index; i < size(); i++) {
                 s2[i+1] = s[i];
             }
             s = s2;
@@ -30,7 +80,7 @@ public class StringListImpl implements StringList{
     }
 
     @Override
-    public String add(String item) {
+    public Integer add(Integer item) {
         if (item == null) {
             throw new NullPointerException("Нельзя добавлять значение null");
         }
@@ -43,7 +93,7 @@ public class StringListImpl implements StringList{
             }
         } else {
             int size1 = size()+1;
-            String[] s2 = new String[size1];
+            Integer[] s2 = new Integer[size1];
             for (int i = 0; i < size(); i++) {
                 s2[i] = s[i];
             }
@@ -54,7 +104,7 @@ public class StringListImpl implements StringList{
 
 
     @Override
-    public String remove(String item) {
+    public Integer remove(Integer item) {
         if (indexOf(item) == -1) {
             throw new NoSuchElementException("В этом списке нет данного элемента");
         }
@@ -64,11 +114,11 @@ public class StringListImpl implements StringList{
 
 
     @Override
-    public String remove(int index) {
+    public Integer remove(int index) {
         if (index > size()-1 || index < 0) {
             throw new IndexOutOfBoundsException("В этом списке нет элемента с данным индексом");
         }
-        String[] s2 = new String[s.length-1];
+        Integer[] s2 = new Integer[s.length-1];
         for (int i = 0; i < index; i++) {
             s2[i] = s[i];
         }
@@ -79,19 +129,11 @@ public class StringListImpl implements StringList{
         return get(index);
     }
 
-    @Override
-    public boolean contains(String item) {
-        boolean check = false;
-        for (int i = 0; i < size(); i++) {
-            if (s[i].equals(item)) {
-                check = true;
-            }
-        }
-        return check;
-    }
+
+
 
     @Override
-    public int indexOf(String item) {
+    public int indexOf(Integer item) {
         int index = -1;
         for (int i = 0; i < size(); i++) {
             if (s[i].equals(item)) {
@@ -102,7 +144,7 @@ public class StringListImpl implements StringList{
     }
 
     @Override
-    public int lastIndexOf(String item) {
+    public int lastIndexOf(Integer item) {
         int index = -1;
         for (int i = size()-1; i >= 0; i--) {
             if (s[i].equals(item)) {
@@ -115,7 +157,7 @@ public class StringListImpl implements StringList{
 
 
     @Override
-    public boolean equals(StringList otherList) {
+    public boolean equals(IntegerList otherList) {
         return Arrays.equals(otherList.toArray(), s);
     }
 
@@ -130,7 +172,7 @@ public class StringListImpl implements StringList{
 
 
     @Override
-    public String get(int index) {
+    public Integer get(int index) {
         if (index > size() || index < 0) {
             throw new IndexOutOfBoundsException("В этом списке нет элемента с данным индексом");
         }
@@ -138,8 +180,8 @@ public class StringListImpl implements StringList{
     }
 
     @Override
-    public String[] toArray() {
-        String[] s2 = new String[size()];
+    public Integer[] toArray() {
+        Integer[] s2 = new Integer[size()];
         for (int i = 0; i < size(); i++) {
             s2[i] = s[i];
         }
@@ -148,10 +190,10 @@ public class StringListImpl implements StringList{
 
     @Override
     public void clear() {
-        s = new String[0];
+        s = new Integer[0];
     }
     @Override
-    public String set(int index, String item) {
+    public Integer set(int index, Integer item) {
         if (index > size()-1 || index < 0) {
             throw new IndexOutOfBoundsException("В этом списке нет элемента с данным индексом");
         }
@@ -168,5 +210,8 @@ public class StringListImpl implements StringList{
         }
         return size;
     }
+
+
+
 
 }
