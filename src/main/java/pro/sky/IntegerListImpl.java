@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class IntegerListImpl implements IntegerList {
-    private Integer[] s = new Integer[10];
+    private Integer[] s = new Integer[2];
 
 
     public IntegerListImpl() {
@@ -12,7 +12,58 @@ public class IntegerListImpl implements IntegerList {
     }
 
 
-    private Integer[] sortInsertion() {
+    public void grow () {
+            int size = (int)(size()*1.5);
+            Integer[] s2 = new Integer[size];
+            for (int i = 0; i < size(); i++) {
+                s2[i] = s[i];
+            }
+            s = s2;
+    }
+
+    @Override
+    public Integer add(int index, Integer item) {
+        if (item == null) {
+            throw new NullPointerException("Нельзя добавлять значение null");
+        }
+        if (size() == s.length) {
+            grow();
+        }
+        Integer[] s2 = new Integer[size()+1];
+        for (int i = 0; i < index; i++) {
+            s2[i] = s[i];
+        }
+        s2[index] = item;
+        for (int i = index; i < size(); i++) {
+            s2[i+1] = s[i];
+        }
+        s = s2;
+        return item;
+    }
+
+    @Override
+    public Integer add(Integer item) {
+        if (item == null) {
+            throw new NullPointerException("Нельзя добавлять значение null");
+        }
+        if (size() != s.length) {
+            for (int i = 0; i < s.length; i++) {
+                if (s[i] == null) {
+                    s[i] = item;
+                    return item;
+                }
+            }
+        } else {
+            grow();
+            s[size()] = item;
+        }
+        return item;
+    }
+
+
+
+
+/*    private Integer[] sortInsertion() {
         Integer[] result = Arrays.copyOf(s, size());
         for (int i = 1; i < size(); i++) {
             Integer temp = result[i];
@@ -24,6 +75,36 @@ public class IntegerListImpl implements IntegerList {
             result[j] = temp;
         }
         return result;
+    }*/
+
+    public static void quickSort(Integer[] arr, int begin, int end) {
+        if (begin < end) {
+            int partitionIndex = partition(arr, begin, end);
+            quickSort(arr, begin, partitionIndex - 1);
+            quickSort(arr, partitionIndex + 1, end);
+        }
+    }
+
+    private static int partition(Integer[] arr, int begin, int end) {
+        int pivot = arr[end];
+        int i = (begin - 1);
+
+        for (int j = begin; j < end; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+
+                swapElements(arr, i, j);
+            }
+        }
+
+        swapElements(arr, i + 1, end);
+        return i + 1;
+    }
+
+    private static void swapElements(Integer[] arr, int indexA, int indexB) {
+        Integer tmp = arr[indexA];
+        arr[indexA] = arr[indexB];
+        arr[indexB] = tmp;
     }
 
 
@@ -39,7 +120,9 @@ public class IntegerListImpl implements IntegerList {
     }
     @Override
     public boolean containsBinary (Integer element) {
-        Integer[] arr = sortInsertion();
+ //       Integer[] arr = sortInsertion();
+        Integer[] arr = Arrays.copyOf(s, s.length);
+        quickSort(arr, 0, s.length-1);
         int min = 0;
         int max = arr.length - 1;
 
@@ -57,49 +140,6 @@ public class IntegerListImpl implements IntegerList {
             }
         }
         return false;
-    }
-
-
-
-
-    @Override
-    public Integer add(int index, Integer item) {
-        if (item == null) {
-            throw new NullPointerException("Нельзя добавлять значение null");
-        }
-            Integer[] s2 = new Integer[size()+1];
-            for (int i = 0; i < index; i++) {
-                s2[i] = s[i];
-            }
-            s2[index] = item;
-            for (int i = index; i < size(); i++) {
-                s2[i+1] = s[i];
-            }
-            s = s2;
-            return item;
-    }
-
-    @Override
-    public Integer add(Integer item) {
-        if (item == null) {
-            throw new NullPointerException("Нельзя добавлять значение null");
-        }
-        if (size() != s.length) {
-            for (int i = 0; i < s.length; i++) {
-                if (s[i] == null) {
-                    s[i] = item;
-                    return item;
-                }
-            }
-        } else {
-            int size1 = size()+1;
-            Integer[] s2 = new Integer[size1];
-            for (int i = 0; i < size(); i++) {
-                s2[i] = s[i];
-            }
-            s = s2;
-            s[size()] = item;}
-        return item;
     }
 
 
@@ -210,7 +250,6 @@ public class IntegerListImpl implements IntegerList {
         }
         return size;
     }
-
 
 
 

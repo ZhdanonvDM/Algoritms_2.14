@@ -5,14 +5,23 @@ import java.util.Arrays;
 public class Main {
     public static void main(String[] args) {
       IntegerListImpl s = new IntegerListImpl();
-        fillBase(s);
-        System.out.println(s.containsBinary((Integer)8));
+       fillBase(s);
+        printStringList(s);
+        System.out.println(s.containsBinary((Integer)4));
 
-
-/*//      Тестирование методов сортировки
-
+//      Тестирование методов рекурсивной сортировки
+/*        long start = System.currentTimeMillis();
         int[] testArray = generateRandomArray();
-        long start = System.currentTimeMillis();
+        mergeSort(Arrays.copyOf(testArray, testArray.length));
+        System.out.println(System.currentTimeMillis() - start);
+
+        start = System.currentTimeMillis();
+        quickSort(Arrays.copyOf(testArray, testArray.length), 0, testArray.length-1);
+        System.out.println(System.currentTimeMillis() - start);*/
+
+//      Тестирование методов сортировки
+
+/*        long start = System.currentTimeMillis();
 
         //Пузырьковая сортировка
         sortBubble(Arrays.copyOf(testArray, testArray.length));
@@ -30,8 +39,78 @@ public class Main {
     }
 
 
-    //Методы сортировки
 
+
+    //Методы рекурсивной сортировки
+    public static void mergeSort(int[] arr) {
+        if (arr.length < 2) {
+            return;
+        }
+        int mid = arr.length / 2;
+        int[] left = new int[mid];
+        int[] right = new int[arr.length - mid];
+
+        for (int i = 0; i < left.length; i++) {
+            left[i] = arr[i];
+        }
+
+        for (int i = 0; i < right.length; i++) {
+            right[i] = arr[mid + i];
+        }
+
+        mergeSort(left);
+        mergeSort(right);
+
+        merge(arr, left, right);
+    }
+    public static void merge(int[] arr, int[] left, int[] right) {
+        int mainP = 0;
+        int leftP = 0;
+        int rightP = 0;
+        while (leftP < left.length && rightP < right.length) {
+            if (left[leftP] <= right[rightP]) {
+                arr[mainP++] = left[leftP++];
+            } else {
+                arr[mainP++] = right[rightP++];
+            }
+        }
+        while (leftP < left.length) {
+            arr[mainP++] = left[leftP++];
+        }
+        while (rightP < right.length) {
+            arr[mainP++] = right[rightP++];
+        }
+    }
+
+
+
+    public static void quickSort(int[] arr, int begin, int end) {
+        if (begin < end) {
+            int partitionIndex = partition(arr, begin, end);
+
+            quickSort(arr, begin, partitionIndex - 1);
+            quickSort(arr, partitionIndex + 1, end);
+        }
+    }
+
+    private static int partition(int[] arr, int begin, int end) {
+        int pivot = arr[end];
+        int i = (begin - 1);
+
+        for (int j = begin; j < end; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+
+                swapElements(arr, i, j);
+            }
+        }
+
+        swapElements(arr, i + 1, end);
+        return i + 1;
+    }
+
+
+    //Методы сортировки
     public static void sortSelection(int[] arr) {
         for (int i = 0; i < arr.length - 1; i++) {
             int minElementIndex = i;
@@ -76,7 +155,7 @@ public class Main {
 
     public static int[] generateRandomArray() {
         java.util.Random random = new java.util.Random();
-        int[] arr = new int[100_000];
+        int[] arr = new int[1_000_000];
         for (int i = 0; i < arr.length; i++) {
             arr[i] = random.nextInt(10000) + 10000;
         }
